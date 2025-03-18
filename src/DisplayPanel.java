@@ -18,10 +18,15 @@ public class DisplayPanel extends JPanel implements  MouseListener, ActionListen
 //    private Color rectColor;
 
     private String message;
+    private String message2;
     private double time;
     private int dimensions;
 
     private JTextField textField;
+    private JButton button;
+    private JButton start;
+
+    private boolean gameOver;
 
     public DisplayPanel() {
 //        rectX = 50;
@@ -31,11 +36,19 @@ public class DisplayPanel extends JPanel implements  MouseListener, ActionListen
 //        rect2Y = 5;
 //        rect2 = new Rectangle(20, 20);
 //        rectColor = Color.RED;
+        button = new JButton("Submit");
+        button.addActionListener(this);
+        add(button);
+
+        start = new JButton("Start Game");
+        start.addActionListener(this);
+        add(start);
+
+        gameOver = true;
         dimensions = 10;
-        time = dimensions*dimensions*2;
         message = "Time: " + time + "s";
 
-        // UPDATE timer to be 10ms, which will now trigger 100 times per second
+        // ticks every 100ms
         Timer timer = new Timer(100, this);
         timer.start();
 
@@ -70,9 +83,20 @@ public class DisplayPanel extends JPanel implements  MouseListener, ActionListen
 //            rectColor = Color.MAGENTA;
 //        }
 
-        g.setFont(new Font("Arial", Font.BOLD, 12));
+
+        start.setLocation(200, 200);
+        textField.setLocation(350, 400);
+        button.setLocation(350, 425);
+        g.setFont(new Font("Arial", Font.BOLD, 20));
         g2d.setColor(Color.BLACK);
-        g2d.drawString(message, 120, 150);
+
+        if (gameOver) {
+            add(start);
+            add(textField);
+            add(button);
+        } else {
+            g2d.drawString(message, 125, 400);
+        }
     }
 
 
@@ -112,9 +136,35 @@ public class DisplayPanel extends JPanel implements  MouseListener, ActionListen
 
             if (time == 0) {
                 message = "Game over";
+                gameOver = true;
             }
             // must call repaint to refresh the screen to show the new position of rect2
             repaint();
+        } else if (e.getSource() instanceof JButton) {
+                JButton casted = (JButton) e.getSource();
+                if (casted == button) {
+                    String input = textField.getText();
+                    if (input.matches("[0-9]+")) {
+                        if (Integer.parseInt(input) > 0 && Integer.parseInt(input) <= 30) {
+                            dimensions = Integer.parseInt(textField.getText());
+                        } else {
+                            dimensions = 10;
+                        }
+                    } else {
+                        dimensions = 10;
+                    }
+                    System.out.println(dimensions);
+                    repaint();
+                }
+
+                if (casted == start) {
+                    gameOver = false;
+                    time = dimensions*dimensions*2;
+                    remove(start);
+                    remove(textField);
+                    remove(button);
+                    repaint();
+                }
         }
     }
 }

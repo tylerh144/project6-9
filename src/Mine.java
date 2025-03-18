@@ -8,4 +8,8 @@ public class Mine extends Space {
         super.dig();
         System.out.println("The field exploded");
     }
+
+    @Override
+    public void increaseNum() {
+    }
 }
