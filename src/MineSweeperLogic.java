@@ -3,39 +3,52 @@ import java.util.Scanner;
 public class MineSweeperLogic {
     private Space[][] board;
     private int coins;
-    private Scanner scan;
 
     public MineSweeperLogic () {
         coins = 0;
-        scan = new Scanner(System.in);
     }
 
     public void startGame () {
         System.out.println("Game starting");
+        setBoard(20);
+        printBoard();
     }
 
     private void setBoard (int dimensions) {
         board = new Space[dimensions+2][dimensions+2];
         for (int r = 0; r < board.length; r++) {
             for (int c = 0; c < board.length; c++) {
-                //borders
-                if (r == 0 || r == board.length-1 || c == 0 || c == board.length-1) {
-                    board[r][c] = new Border();
+                board[r][c] = new Space();
+            }
+        }
+
+        int mines = dimensions^2 / 5;
+
+        while (mines > 0) {
+            int r = (int) (Math.random() * dimensions) + 1;
+            int c = (int) (Math.random() * dimensions) + 1;
+
+            if (!(board[r][c] instanceof Mine)) {
+                //place mine
+                board[r][c] = new Mine();
+                mines--;
+                //increase num near for adj tiles
+                for (int i = r-1; i < r+2; i++) {
+                    for (int j = c-1; j < c+2; j++) {
+                        board[i][j].increaseNum();
+                    }
                 }
             }
         }
 
-        //ask for first move
-        //place mines
-        //set each space's number
     }
 
-    //mines = dimensions^2 * some number (random?)
-
     private void printBoard () {
-        for (Space[] r : board) {
-            for (Space c : r) {
-                System.out.print(c.getFaceVal());
+        //prints without border
+        for (int i = 1; i <= board.length-2; i++) {
+            for (int j = 1; j <= board.length-2; j++) {
+                board[i][j].dig();
+                System.out.print(board[i][j].getFaceVal());
             }
             System.out.println();
         }

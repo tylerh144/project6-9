@@ -1,11 +1,9 @@
 public class Space {
     private String faceVal;
-    private String val;
     private int numNear;
 
-    public Space (String val) {
+    public Space () {
         faceVal = "[ ]";
-        this.val = val;
         numNear = 0;
     }
 
@@ -13,8 +11,8 @@ public class Space {
         return faceVal;
     }
 
-    public String getVal() {
-        return val;
+    public void setFaceVal(String faceVal) {
+        this.faceVal = faceVal;
     }
 
     public void increaseNum() {
@@ -22,6 +20,6 @@ public class Space {
     }
 
     public void dig () {
-        faceVal = val;
+        faceVal = " " + numNear + " ";
     }
 }
