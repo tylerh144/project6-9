@@ -1,12 +1,9 @@
 import javax.swing.*;
-import java.awt.Rectangle;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.event.*;
 import java.awt.Font;
-import java.awt.Point;
 
 public class DisplayPanel extends JPanel implements  MouseListener, ActionListener {
 //    private int rectX;
@@ -17,16 +14,18 @@ public class DisplayPanel extends JPanel implements  MouseListener, ActionListen
 //    private Rectangle rect2;
 //    private Color rectColor;
 
-    private String message;
-    private String message2;
+    private String timeLeft;
+    private String boardStats;
     private double time;
     private int dimensions;
 
     private JTextField textField;
-    private JButton button;
+    private JButton setDim;
     private JButton start;
 
     private boolean gameOver;
+
+    private MineSweeperLogic logic;
 
     public DisplayPanel() {
 //        rectX = 50;
@@ -36,9 +35,11 @@ public class DisplayPanel extends JPanel implements  MouseListener, ActionListen
 //        rect2Y = 5;
 //        rect2 = new Rectangle(20, 20);
 //        rectColor = Color.RED;
-        button = new JButton("Submit");
-        button.addActionListener(this);
-        add(button);
+        logic = new MineSweeperLogic(10);
+
+        setDim = new JButton("Submit");
+        setDim.addActionListener(this);
+        add(setDim);
 
         start = new JButton("Start Game");
         start.addActionListener(this);
@@ -46,7 +47,7 @@ public class DisplayPanel extends JPanel implements  MouseListener, ActionListen
 
         gameOver = true;
         dimensions = 10;
-        message = "Time: " + time + "s";
+        timeLeft = "Time: " + time + "s";
 
         // ticks every 100ms
         Timer timer = new Timer(100, this);
@@ -86,16 +87,18 @@ public class DisplayPanel extends JPanel implements  MouseListener, ActionListen
 
         start.setLocation(200, 200);
         textField.setLocation(350, 400);
-        button.setLocation(350, 425);
+        setDim.setLocation(350, 425);
         g.setFont(new Font("Arial", Font.BOLD, 20));
         g2d.setColor(Color.BLACK);
 
         if (gameOver) {
             add(start);
             add(textField);
-            add(button);
+            add(setDim);
         } else {
-            g2d.drawString(message, 125, 400);
+            g2d.drawString(timeLeft, 50, 50);
+            boardStats = "Mines remaining: ";
+            g2d.drawString(boardStats, 50, 100);
         }
     }
 
@@ -132,17 +135,17 @@ public class DisplayPanel extends JPanel implements  MouseListener, ActionListen
         if (e.getSource() instanceof Timer) {
             time-=0.1;
 
-            message = "Time: " + Math.round(time*10)/10.0 + "s";
+            timeLeft = "Time: " + Math.round(time*10)/10.0 + "s";
 
             if (time == 0) {
-                message = "Game over";
+                timeLeft = "Game over";
                 gameOver = true;
             }
             // must call repaint to refresh the screen to show the new position of rect2
             repaint();
         } else if (e.getSource() instanceof JButton) {
                 JButton casted = (JButton) e.getSource();
-                if (casted == button) {
+                if (casted == setDim) {
                     String input = textField.getText();
                     if (input.matches("[0-9]+")) {
                         if (Integer.parseInt(input) > 0 && Integer.parseInt(input) <= 30) {
@@ -162,7 +165,9 @@ public class DisplayPanel extends JPanel implements  MouseListener, ActionListen
                     time = dimensions*dimensions*2;
                     remove(start);
                     remove(textField);
-                    remove(button);
+                    remove(setDim);
+                    logic.setDimensions(dimensions);
+                    logic.startGame();
                     repaint();
                 }
         }

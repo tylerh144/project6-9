@@ -8,6 +8,7 @@ public class Mine extends Space {
 //        System.out.println("The field exploded");
     }
 
+    //maybe delete
     @Override
     public void increaseNum() {
     }
