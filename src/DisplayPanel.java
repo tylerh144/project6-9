@@ -137,11 +137,10 @@ public class DisplayPanel extends JPanel implements  MouseListener, ActionListen
 
             timeLeft = "Time: " + Math.round(time*10)/10.0 + "s";
 
-            if (time == 0) {
+            if (time < 0) {
                 timeLeft = "Game over";
                 gameOver = true;
             }
-            // must call repaint to refresh the screen to show the new position of rect2
             repaint();
         } else if (e.getSource() instanceof JButton) {
                 JButton casted = (JButton) e.getSource();
