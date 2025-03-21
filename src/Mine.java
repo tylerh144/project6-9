@@ -3,9 +3,14 @@ public class Mine extends Space {
     }
 
     @Override
-    public void dig () {
-        setFaceVal("[X]");
-//        System.out.println("The field exploded");
+    public boolean dig () {
+        if (!isFlagged()) {
+            setFaceVal("[X]");
+            //System.out.println("The field exploded");
+            return true;
+        }
+        return false;
+
     }
 
     //maybe delete

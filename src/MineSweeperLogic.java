@@ -2,26 +2,24 @@ import java.util.Scanner;
 
 public class MineSweeperLogic {
     private Space[][] board;
-    private int coins;
     private int totalMines;
     private int dimensions;
 
     public MineSweeperLogic (int d) {
-        coins = 0;
         totalMines = 0;
-        dimensions = d;
     }
 
     public int getTotalMines() {
         return totalMines;
     }
 
-    public void setDimensions(int dimensions) {
-        this.dimensions = dimensions;
+    public Space[][] getBoard() {
+        return board;
     }
 
-    public void startGame () {
+    public void startGame (int d) {
         System.out.println("Game starting");
+        dimensions = d;
         setBoard();
         printBoard();
     }
