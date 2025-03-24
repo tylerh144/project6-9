@@ -1,12 +1,20 @@
+import java.awt.*;
+
 public class Space {
     private String faceVal;
     private int numNear;
     private boolean isFlagged;
+    private Rectangle tile;
 
     public Space () {
         faceVal = "[ ]";
         numNear = 0;
         isFlagged = false;
+        tile = new Rectangle(20, 20);
+    }
+
+    public Rectangle getTile() {
+        return tile;
     }
 
     public String getFaceVal() {

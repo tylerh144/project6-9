@@ -4,16 +4,12 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 public class DisplayPanel extends JPanel implements  MouseListener, ActionListener {
-    private int rectX;
-    private int rectY;
-//    private Rectangle rect1;
-//    private int rect2X;
-//    private int rect2Y;
-//    private Rectangle rect2;
-//    private Color rectColor;
+    private int x;
+    private int y;
 
     private String timeLeft;
     private String boardStats;
@@ -33,8 +29,8 @@ public class DisplayPanel extends JPanel implements  MouseListener, ActionListen
     private MineSweeperLogic logic;
 
     public DisplayPanel() {
-        rectX = 80;
-        rectY = 120;
+        x = 80;
+        y = 120;
 
         logic = new MineSweeperLogic(10);
 
@@ -96,16 +92,23 @@ public class DisplayPanel extends JPanel implements  MouseListener, ActionListen
 
             for (int i = 1; i <= dimensions; i++) {
                 for (int j = 1; j <= dimensions; j++) {
-                    Rectangle tile = new Rectangle(20, 20);
-                    tile.setLocation(rectX, rectY);
+                    Space s = logic.getBoard()[i][j];
+                    Rectangle tile = s.getTile();
+
+                    if (s.isFlagged()) {
+                        g2d.drawString("F", x+5, y+20);
+                    }
+
+                    tile.setLocation(x, y);
                     g2d.draw(tile);
-                    rectX+=20;
+                    x+=20;
                 }
-                rectY+=20;
-                rectX = 80;
+                y += 20;
+                x = 80;
             }
-            rectX = 80;
-            rectY = 120;
+            x = 80;
+            y = 120;
+            validate();
         }
     }
 
@@ -129,6 +132,21 @@ public class DisplayPanel extends JPanel implements  MouseListener, ActionListen
 //
 //            repaint();
 //        }
+
+        Point mouseClick = e.getPoint();
+        for (int i = 1; i <= dimensions; i++) {
+            for (int j = 1; j <= dimensions; j++) {
+                Space s = logic.getBoard()[i][j];
+                if (s.getTile().contains(mouseClick)) {
+                    if (e.getButton() == MouseEvent.BUTTON1) {
+                        System.out.println("dig");
+                    } else if (e.getButton() == MouseEvent.BUTTON3) {
+                        s.flipFlag();
+                        System.out.println("flip");
+                    }
+                }
+            }
+        }
     }
 
     @Override
