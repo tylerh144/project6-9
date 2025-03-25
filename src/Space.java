@@ -4,13 +4,15 @@ public class Space {
     private String faceVal;
     private int numNear;
     private boolean isFlagged;
+    private boolean isDug;
     private Rectangle tile;
 
     public Space () {
         faceVal = "[ ]";
         numNear = 0;
         isFlagged = false;
-        tile = new Rectangle(20, 20);
+        isDug = false;
+        tile = new Rectangle(30, 30);
     }
 
     public Rectangle getTile() {
@@ -25,6 +27,10 @@ public class Space {
         return isFlagged;
     }
 
+    public boolean isDug() {
+        return isDug;
+    }
+
     public void flipFlag() {
         isFlagged = !isFlagged;
     }
@@ -37,11 +43,8 @@ public class Space {
         numNear++;
     }
 
-    public boolean dig () {
-        if (!isFlagged) {
-            faceVal = " " + numNear + " ";
-            return true;
-        }
-        return false;
+    public void dig () {
+        faceVal = " " + numNear + " ";
+        isDug = true;
     }
 }

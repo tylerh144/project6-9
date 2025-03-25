@@ -22,9 +22,13 @@ public class DisplayPanel extends JPanel implements  MouseListener, ActionListen
     private JButton back;
     private Timer timer;
     private BufferedImage title;
+    private BufferedImage flag;
 
     private boolean gameOver;
     private boolean menu;
+    private int spacesDug;
+    private int totalMines;
+    private int flags;
 
     private MineSweeperLogic logic;
 
@@ -59,6 +63,7 @@ public class DisplayPanel extends JPanel implements  MouseListener, ActionListen
 
         try {
             title = ImageIO.read(new File("src\\title.png"));
+            flag = ImageIO.read(new File("src\\flag.png"));
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
@@ -87,7 +92,9 @@ public class DisplayPanel extends JPanel implements  MouseListener, ActionListen
                 g.drawImage(title, 0, 150, null);
         } else {
             g2d.drawString(timeLeft, 50, 50);
-            boardStats = "Mines remaining: ";
+
+            //fix this
+            boardStats = "Flags left: " + flags;
             g2d.drawString(boardStats, 50, 100);
 
             for (int i = 1; i <= dimensions; i++) {
@@ -96,14 +103,16 @@ public class DisplayPanel extends JPanel implements  MouseListener, ActionListen
                     Rectangle tile = s.getTile();
 
                     if (s.isFlagged()) {
-                        g2d.drawString("F", x+5, y+20);
+                        g2d.drawImage(flag, x, y, null);
+                    } else {
+                        g2d.drawString(s.getFaceVal(), x + 5, y + 20);
                     }
 
                     tile.setLocation(x, y);
                     g2d.draw(tile);
-                    x+=20;
+                    x+=30;
                 }
-                y += 20;
+                y += 30;
                 x = 80;
             }
             x = 80;
@@ -121,28 +130,35 @@ public class DisplayPanel extends JPanel implements  MouseListener, ActionListen
 
     @Override
     public void mouseReleased(MouseEvent e) {
-//        if (e.getButton() == MouseEvent.BUTTON1) {
-//            Point mouseClickLocation = e.getPoint();
-//            message = "mouse click: (" + mouseClickLocation.getX() + ", " + mouseClickLocation.getY() + ")";
-//            if (rect1.contains(mouseClickLocation)) {
-//                rectColor = Color.GREEN;
-//            } else {
-//                rectColor = Color.RED;
-//            }
-//
-//            repaint();
-//        }
-
         Point mouseClick = e.getPoint();
-        for (int i = 1; i <= dimensions; i++) {
-            for (int j = 1; j <= dimensions; j++) {
-                Space s = logic.getBoard()[i][j];
-                if (s.getTile().contains(mouseClick)) {
-                    if (e.getButton() == MouseEvent.BUTTON1) {
-                        System.out.println("dig");
-                    } else if (e.getButton() == MouseEvent.BUTTON3) {
-                        s.flipFlag();
-                        System.out.println("flip");
+        if (!gameOver) {
+            for (int i = 1; i <= dimensions; i++) {
+                for (int j = 1; j <= dimensions; j++) {
+                    Space s = logic.getBoard()[i][j];
+                    if (s.getTile().contains(mouseClick)) {
+                        if (e.getButton() == MouseEvent.BUTTON1) {
+
+                            if (!s.isFlagged() && !s.isDug()) {
+                                s.dig();
+                                spacesDug++;
+                                System.out.println("dig"); //for testing
+                                if (s instanceof Mine) {
+                                    gameOver = true;
+                                } else if (spacesDug == dimensions * dimensions - totalMines) {
+                                    System.out.println("winner"); //for testing
+                                }
+                            }
+                        } else if (e.getButton() == MouseEvent.BUTTON3) {
+                            if (!s.isDug()) {
+                                s.flipFlag();
+                                if (s.isFlagged()) {
+                                    flags--;
+                                } else {
+                                    flags++;
+                                }
+                                System.out.println("flip"); //for testing
+                            }
+                        }
                     }
                 }
             }
@@ -161,6 +177,10 @@ public class DisplayPanel extends JPanel implements  MouseListener, ActionListen
             time-=0.1;
 
             timeLeft = "Time: " + Math.round(time*10)/10.0 + "s";
+
+            if (gameOver) {
+                time = -1;
+            }
 
             if (time < 0) {
                 timeLeft = "Game over";
@@ -199,6 +219,9 @@ public class DisplayPanel extends JPanel implements  MouseListener, ActionListen
                     removeAll();
                     timer.start();
                     logic.startGame(dimensions);
+                    spacesDug = 0;
+                    totalMines = logic.getTotalMines();
+                    flags = totalMines;
                     repaint();
                 }
 

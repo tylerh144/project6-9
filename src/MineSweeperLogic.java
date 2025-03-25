@@ -21,7 +21,7 @@ public class MineSweeperLogic {
         System.out.println("Game starting");
         dimensions = d;
         setBoard();
-        printBoard();
+//        printBoard();
     }
 
     private void setBoard () {
