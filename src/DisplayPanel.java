@@ -147,8 +147,7 @@ public class DisplayPanel extends JPanel implements  MouseListener, ActionListen
                                 } else if (spacesDug == dimensions * dimensions - totalMines) {
                                     System.out.println("winner"); //for testing
                                 }
-                            }
-                            if (s.isDug() && s.getFlagsNear() == s.getNumNear()) {
+                            } else if (s.isDug() && s.getFlagsNear() == s.getNumNear()) {
                                 for (int ii = i-1; ii <= i+1; ii++) {
                                     for (int jj = j-1; jj <= j+1; jj++) {
                                         Space ss = logic.getBoard()[ii][jj];
