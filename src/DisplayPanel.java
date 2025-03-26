@@ -148,13 +148,39 @@ public class DisplayPanel extends JPanel implements  MouseListener, ActionListen
                                     System.out.println("winner"); //for testing
                                 }
                             }
+                            if (s.isDug() && s.getFlagsNear() == s.getNumNear()) {
+                                for (int ii = i-1; ii <= i+1; ii++) {
+                                    for (int jj = j-1; jj <= j+1; jj++) {
+                                        Space ss = logic.getBoard()[ii][jj];
+                                        if (!ss.isFlagged() && !ss.isDug()) {
+                                            ss.dig();
+                                            if (ss instanceof Mine) {
+                                                gameOver = true;
+                                            }
+                                            spacesDug++;
+                                        }
+                                    }
+                                }
+                            }
                         } else if (e.getButton() == MouseEvent.BUTTON3) {
                             if (!s.isDug()) {
                                 s.flipFlag();
                                 if (s.isFlagged()) {
                                     flags--;
+                                    for (int ii = i-1; ii <= i+1; ii++) {
+                                        for (int jj = j-1; jj <= j+1; jj++) {
+                                            logic.getBoard()[ii][jj].addFlags(1);
+                                            System.out.println("added flags");
+                                        }
+                                    }
                                 } else {
                                     flags++;
+                                    for (int ii = i-1; ii <= i+1; ii++) {
+                                        for (int jj = j-1; jj <= j+1; jj++) {
+                                            logic.getBoard()[ii][jj].addFlags(-1);
+                                            System.out.println("removed flags");
+                                        }
+                                    }
                                 }
                                 System.out.println("flip"); //for testing
                             }

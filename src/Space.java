@@ -3,6 +3,7 @@ import java.awt.*;
 public class Space {
     private String faceVal;
     private int numNear;
+    private int flagsNear;
     private boolean isFlagged;
     private boolean isDug;
     private Rectangle tile;
@@ -10,6 +11,7 @@ public class Space {
     public Space () {
         faceVal = "[ ]";
         numNear = 0;
+        flagsNear = 0;
         isFlagged = false;
         isDug = false;
         tile = new Rectangle(30, 30);
@@ -21,6 +23,14 @@ public class Space {
 
     public String getFaceVal() {
         return faceVal;
+    }
+
+    public int getFlagsNear() {
+        return flagsNear;
+    }
+
+    public int getNumNear() {
+        return numNear;
     }
 
     public boolean isFlagged() {
@@ -41,6 +51,10 @@ public class Space {
 
     public void increaseNum() {
         numNear++;
+    }
+
+    public void addFlags(int i) {
+        flagsNear += i;
     }
 
     public void dig () {
