@@ -105,7 +105,12 @@ public class DisplayPanel extends JPanel implements  MouseListener, ActionListen
                     if (s.isFlagged()) {
                         g2d.drawImage(flag, x, y, null);
                     } else {
+                        g.setColor(Color.GREEN);
+                        if (s.getFaceVal().equals(" " + s.getNumNear() + " ")) {
+                            g.setColor(Color.BLACK);
+                        }
                         g2d.drawString(s.getFaceVal(), x + 5, y + 20);
+                        g.setColor(Color.BLACK);
                     }
 
                     tile.setLocation(x, y);
@@ -144,22 +149,33 @@ public class DisplayPanel extends JPanel implements  MouseListener, ActionListen
                                 System.out.println("dig"); //for testing
                                 if (s instanceof Mine) {
                                     gameOver = true;
-                                } else if (spacesDug == dimensions * dimensions - totalMines) {
-                                    System.out.println("winner"); //for testing
                                 }
                             } else if (s.isDug() && s.getFlagsNear() == s.getNumNear()) {
                                 for (int ii = i-1; ii <= i+1; ii++) {
                                     for (int jj = j-1; jj <= j+1; jj++) {
                                         Space ss = logic.getBoard()[ii][jj];
                                         if (!ss.isFlagged() && !ss.isDug()) {
-                                            ss.dig();
                                             if (ss instanceof Mine) {
                                                 gameOver = true;
                                             }
-                                            spacesDug++;
+                                            ss.dig();
+                                            if (ii >= 1 && ii <= dimensions && jj >= 1 && jj <= dimensions) {
+                                                spacesDug++;
+                                                System.out.println("dig");
+                                            }
                                         }
                                     }
                                 }
+                            }
+                            //win
+                            if (spacesDug == dimensions * dimensions - totalMines) {
+                                System.out.println("winner"); //for testing
+                                timer.stop();
+                                timeLeft = "You win";
+                                gameOver = true;
+                                add(back);
+                                validate();
+                                repaint();
                             }
                         } else if (e.getButton() == MouseEvent.BUTTON3) {
                             if (!s.isDug()) {
@@ -169,17 +185,17 @@ public class DisplayPanel extends JPanel implements  MouseListener, ActionListen
                                     for (int ii = i-1; ii <= i+1; ii++) {
                                         for (int jj = j-1; jj <= j+1; jj++) {
                                             logic.getBoard()[ii][jj].addFlags(1);
-                                            System.out.println("added flags");
                                         }
                                     }
+                                    System.out.println("added flags");
                                 } else {
                                     flags++;
                                     for (int ii = i-1; ii <= i+1; ii++) {
                                         for (int jj = j-1; jj <= j+1; jj++) {
                                             logic.getBoard()[ii][jj].addFlags(-1);
-                                            System.out.println("removed flags");
                                         }
                                     }
+                                    System.out.println("removed flags");
                                 }
                                 System.out.println("flip"); //for testing
                             }
@@ -216,6 +232,7 @@ public class DisplayPanel extends JPanel implements  MouseListener, ActionListen
                     validate();
                 }
             }
+
             repaint();
         } else if (e.getSource() instanceof JButton) {
                 JButton casted = (JButton) e.getSource();
