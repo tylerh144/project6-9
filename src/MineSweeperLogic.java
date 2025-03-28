@@ -40,7 +40,7 @@ public class MineSweeperLogic {
             int r = (int) (Math.random() * dimensions) + 1;
             int c = (int) (Math.random() * dimensions) + 1;
 
-            if (!(board[r][c] instanceof Mine)) {
+            if (!(board[r][c] instanceof Mine) && !(r >= dimensions/2 - 1 && r < dimensions/2 + 1 && c >= dimensions/2 - 1 && c < dimensions/2 + 1)) {
                 //place mine
                 board[r][c] = new Mine();
                 mines--;

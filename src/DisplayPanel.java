@@ -23,6 +23,7 @@ public class DisplayPanel extends JPanel implements  MouseListener, ActionListen
     private Timer timer;
     private BufferedImage title;
     private BufferedImage flag;
+    private BufferedImage boom;
 
     private boolean gameOver;
     private boolean menu;
@@ -64,6 +65,7 @@ public class DisplayPanel extends JPanel implements  MouseListener, ActionListen
         try {
             title = ImageIO.read(new File("src\\title.png"));
             flag = ImageIO.read(new File("src\\flag.png"));
+            boom = ImageIO.read(new File("src\\boom.png"));
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
@@ -105,9 +107,33 @@ public class DisplayPanel extends JPanel implements  MouseListener, ActionListen
                     if (s.isFlagged()) {
                         g2d.drawImage(flag, x, y, null);
                     } else {
-                        g.setColor(Color.GREEN);
-                        if (s.getFaceVal().equals(" " + s.getNumNear() + " ")) {
+                        int numNear = s.getNumNear();
+                        g.setColor(Color.decode("#7eed39"));
+                        if (s.getFaceVal().equals(" " + numNear+ " ")) {
+                            if (numNear == 0) {
+                                g.setColor(Color.WHITE);
+                            } else if (numNear == 1) {
+                                g.setColor(Color.BLUE);
+                            } else if (numNear == 2) {
+                                g.setColor(Color.decode("#32a852"));
+                            } else if (numNear == 3) {
+                                g.setColor(Color.RED);
+                            } else if (numNear == 4) {
+                                g.setColor(Color.decode("#8732a8"));
+                            } else if (numNear == 5) {
+                                g.setColor(Color.ORANGE);
+                            } else if (numNear == 6) {
+                                g.setColor(Color.CYAN);
+                            } else if (numNear == 7) {
+                                g.setColor(Color.decode("#4d000a"));
+                            } else if (numNear == 8) {
+                                g.setColor(Color.BLACK);
+                            }
+                        }
+                        if (s instanceof Mine && gameOver) {
                             g.setColor(Color.BLACK);
+                            //if this is the exploded one
+                            g2d.drawImage(boom, x - 115, y - 150, null);
                         }
                         g2d.drawString(s.getFaceVal(), x + 5, y + 20);
                         g.setColor(Color.BLACK);
@@ -149,19 +175,23 @@ public class DisplayPanel extends JPanel implements  MouseListener, ActionListen
                                 System.out.println("dig"); //for testing
                                 if (s instanceof Mine) {
                                     gameOver = true;
+                                    repaint();
                                 }
                             } else if (s.isDug() && s.getFlagsNear() == s.getNumNear()) {
                                 for (int ii = i-1; ii <= i+1; ii++) {
                                     for (int jj = j-1; jj <= j+1; jj++) {
                                         Space ss = logic.getBoard()[ii][jj];
                                         if (!ss.isFlagged() && !ss.isDug()) {
+                                            ss.dig();
                                             if (ss instanceof Mine) {
                                                 gameOver = true;
-                                            }
-                                            ss.dig();
-                                            if (ii >= 1 && ii <= dimensions && jj >= 1 && jj <= dimensions) {
-                                                spacesDug++;
-                                                System.out.println("dig");
+                                                repaint();
+                                            } else {
+
+                                                if (ii >= 1 && ii <= dimensions && jj >= 1 && jj <= dimensions) {
+                                                    spacesDug++;
+                                                    System.out.println("dig");
+                                                }
                                             }
                                         }
                                     }
