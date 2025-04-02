@@ -4,13 +4,9 @@ public class Mine extends Space {
 
     @Override
     public void dig () {
+        super.dig();
         setFaceVal("[X]");
+        //for testing
         System.out.println("The field exploded");
-
-    }
-
-    //maybe delete
-    @Override
-    public void increaseNum() {
     }
 }

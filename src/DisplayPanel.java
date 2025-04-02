@@ -12,7 +12,6 @@ public class DisplayPanel extends JPanel implements  MouseListener, ActionListen
     private int y;
 
     private String timeLeft;
-    private String boardStats;
     private double time;
     private int dimensions;
 
@@ -24,6 +23,7 @@ public class DisplayPanel extends JPanel implements  MouseListener, ActionListen
     private BufferedImage title;
     private BufferedImage flag;
     private BufferedImage boom;
+    private BufferedImage win;
 
     private boolean gameOver;
     private boolean menu;
@@ -36,6 +36,8 @@ public class DisplayPanel extends JPanel implements  MouseListener, ActionListen
     public DisplayPanel() {
         x = 80;
         y = 120;
+
+        setSize(500, 500);
 
         logic = new MineSweeperLogic(10);
 
@@ -66,6 +68,7 @@ public class DisplayPanel extends JPanel implements  MouseListener, ActionListen
             title = ImageIO.read(new File("src\\title.png"));
             flag = ImageIO.read(new File("src\\flag.png"));
             boom = ImageIO.read(new File("src\\boom.png"));
+            win = ImageIO.read(new File("src\\star.png"));
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
@@ -95,9 +98,14 @@ public class DisplayPanel extends JPanel implements  MouseListener, ActionListen
         } else {
             g2d.drawString(timeLeft, 50, 50);
 
+            if (gameOver && spacesDug == dimensions * dimensions - totalMines) {
+                g2d.drawImage(win, 0, 0, 500, 500, null);
+            }
+
             //fix this
-            boardStats = "Flags left: " + flags;
+            String boardStats = "Flags left: " + flags;
             g2d.drawString(boardStats, 50, 100);
+            ArrayList<Space> booms = logic.getBooms();
 
             for (int i = 1; i <= dimensions; i++) {
                 for (int j = 1; j <= dimensions; j++) {
@@ -109,7 +117,7 @@ public class DisplayPanel extends JPanel implements  MouseListener, ActionListen
                     } else {
                         int numNear = s.getNumNear();
                         g.setColor(Color.decode("#7eed39"));
-                        if (s.getFaceVal().equals(" " + numNear+ " ")) {
+                        if (s.getFaceVal().equals(" " + numNear + " ")) {
                             if (numNear == 0) {
                                 g.setColor(Color.WHITE);
                             } else if (numNear == 1) {
@@ -132,8 +140,13 @@ public class DisplayPanel extends JPanel implements  MouseListener, ActionListen
                         }
                         if (s instanceof Mine && gameOver) {
                             g.setColor(Color.BLACK);
-                            //if this is the exploded one
-                            g2d.drawImage(boom, x - 115, y - 150, null);
+
+
+                            if (booms.contains(s)) {
+                                g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .66f));
+                                g2d.drawImage(boom, x - 130, y - 150, null);
+                                g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1));
+                            }
                         }
                         g2d.drawString(s.getFaceVal(), x + 5, y + 20);
                         g.setColor(Color.BLACK);

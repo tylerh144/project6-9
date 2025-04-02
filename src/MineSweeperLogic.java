@@ -1,4 +1,4 @@
-import java.util.Scanner;
+import java.util.ArrayList;
 
 public class MineSweeperLogic {
     private Space[][] board;
@@ -21,7 +21,18 @@ public class MineSweeperLogic {
         System.out.println("Game starting");
         dimensions = d;
         setBoard();
-//        printBoard();
+    }
+
+    public ArrayList<Space> getBooms() {
+        ArrayList<Space> booms = new ArrayList<>();
+        for (Space[] r : board) {
+            for(Space c : r) {
+                if (c instanceof Mine && c.isDug()) {
+                    booms.add(c);
+                }
+            }
+        }
+        return booms;
     }
 
     private void setBoard () {
@@ -42,9 +53,8 @@ public class MineSweeperLogic {
 
             if (!(board[r][c] instanceof Mine)) {
 
-                if (dimensions > 10) {
-                    //maybe fix this
-                    if (!(r >= dimensions/2 - 2 && r < dimensions/2 + 2 && c >= dimensions/2 - 2 && c < dimensions/2 + 2)) {
+                if (dimensions >= 10) {
+                    if (!(r > dimensions/2 - 2 && r <= dimensions/2 + 2 && c > dimensions/2 - 2 && c <= dimensions/2 + 2)) {
                         //place mine
                         board[r][c] = new Mine();
                         mines--;
