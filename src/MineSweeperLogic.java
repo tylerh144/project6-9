@@ -53,19 +53,7 @@ public class MineSweeperLogic {
 
             if (!(board[r][c] instanceof Mine)) {
 
-                if (dimensions >= 10) {
-                    if (!(r > dimensions/2 - 2 && r <= dimensions/2 + 2 && c > dimensions/2 - 2 && c <= dimensions/2 + 2)) {
-                        //place mine
-                        board[r][c] = new Mine();
-                        mines--;
-                        //increase num near for adj tiles
-                        for (int i = r - 1; i <= r + 1; i++) {
-                            for (int j = c - 1; j <= c + 1; j++) {
-                                board[i][j].increaseNum();
-                            }
-                        }
-                    }
-                } else {
+                if (dimensions < 10 || !(r > dimensions / 2 - 2 && r <= dimensions / 2 + 2 && c > dimensions / 2 - 2 && c <= dimensions / 2 + 2)) {
                     //place mine
                     board[r][c] = new Mine();
                     mines--;

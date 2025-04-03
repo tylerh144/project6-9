@@ -99,12 +99,14 @@ public class DisplayPanel extends JPanel implements  MouseListener, ActionListen
             g2d.drawString(timeLeft, 50, 50);
 
             if (gameOver && spacesDug == dimensions * dimensions - totalMines) {
-                g2d.drawImage(win, 0, 0, 500, 500, null);
+                if (dimensions <= 10) {
+                    g2d.drawImage(win, 0, 0, 500, 500, null);
+                } else {
+                    g2d.drawImage(win, 0, 0, dimensions*30+100, dimensions*30+100, null);
+                }
             }
 
-            //fix this
-            String boardStats = "Flags left: " + flags;
-            g2d.drawString(boardStats, 50, 100);
+            g2d.drawString("Flags left: " + flags, 50, 100);
             ArrayList<Space> booms = logic.getBooms();
 
             for (int i = 1; i <= dimensions; i++) {
@@ -113,6 +115,9 @@ public class DisplayPanel extends JPanel implements  MouseListener, ActionListen
                     Rectangle tile = s.getTile();
 
                     if (s.isFlagged()) {
+                        g.setColor(Color.decode("#7eed39"));
+                        g2d.drawString(s.getFaceVal(), x + 5, y + 20);
+                        g.setColor(Color.BLACK);
                         g2d.drawImage(flag, x, y, null);
                     } else {
                         int numNear = s.getNumNear();
