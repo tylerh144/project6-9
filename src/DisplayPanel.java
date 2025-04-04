@@ -98,11 +98,12 @@ public class DisplayPanel extends JPanel implements  MouseListener, ActionListen
         } else {
             g2d.drawString(timeLeft, 50, 50);
 
+            //win image background
             if (gameOver && spacesDug == dimensions * dimensions - totalMines) {
                 if (dimensions <= 10) {
                     g2d.drawImage(win, 0, 0, 500, 500, null);
                 } else {
-                    g2d.drawImage(win, 0, 0, dimensions*30+100, dimensions*30+100, null);
+                    g2d.drawImage(win, 0, 0, dimensions*30+200, dimensions*30+200, null);
                 }
             }
 
@@ -115,14 +116,19 @@ public class DisplayPanel extends JPanel implements  MouseListener, ActionListen
                     Rectangle tile = s.getTile();
 
                     if (s.isFlagged()) {
-                        g.setColor(Color.decode("#7eed39"));
+                        if (gameOver && s instanceof Mine) {
+                            g.setColor(Color.BLACK);
+                        } else {
+                            g.setColor(Color.decode("#7eed39"));
+                        }
                         g2d.drawString(s.getFaceVal(), x + 5, y + 20);
                         g.setColor(Color.BLACK);
                         g2d.drawImage(flag, x, y, null);
                     } else {
+                        //color code numbers
                         int numNear = s.getNumNear();
                         g.setColor(Color.decode("#7eed39"));
-                        if (s.getFaceVal().equals(" " + numNear + " ")) {
+                        if (s.isDug()) {
                             if (numNear == 0) {
                                 g.setColor(Color.WHITE);
                             } else if (numNear == 1) {
@@ -143,9 +149,10 @@ public class DisplayPanel extends JPanel implements  MouseListener, ActionListen
                                 g.setColor(Color.BLACK);
                             }
                         }
+
+                        //reveal mines
                         if (s instanceof Mine && gameOver) {
                             g.setColor(Color.BLACK);
-
 
                             if (booms.contains(s)) {
                                 g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .66f));
