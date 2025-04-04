@@ -94,7 +94,7 @@ public class DisplayPanel extends JPanel implements  MouseListener, ActionListen
                 add(start);
                 add(textField);
                 add(setDim);
-                g.drawImage(title, 0, 150, null);
+                g.drawImage(title, 0, 50, null);
         } else {
             g2d.drawString(timeLeft, 50, 50);
 
