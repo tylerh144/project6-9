@@ -196,11 +196,13 @@ public class DisplayPanel extends JPanel implements  MouseListener, ActionListen
 
                             if (!s.isFlagged() && !s.isDug()) {
                                 s.dig();
-                                spacesDug++;
-                                System.out.println("dig"); //for testing
+
                                 if (s instanceof Mine) {
                                     gameOver = true;
                                     repaint();
+                                } else {
+                                    spacesDug++;
+                                    System.out.println("dig"); //for testing
                                 }
                             } else if (s.isDug() && s.getFlagsNear() == s.getNumNear()) {
                                 for (int ii = i-1; ii <= i+1; ii++) {
