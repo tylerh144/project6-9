@@ -96,8 +96,6 @@ public class DisplayPanel extends JPanel implements  MouseListener, ActionListen
                 add(setDim);
                 g.drawImage(title, 0, 50, null);
         } else {
-            g2d.drawString(timeLeft, 50, 50);
-
             //win image background
             if (gameOver && spacesDug == dimensions * dimensions - totalMines) {
                 if (dimensions <= 10) {
@@ -106,7 +104,7 @@ public class DisplayPanel extends JPanel implements  MouseListener, ActionListen
                     g2d.drawImage(win, 0, 0, dimensions*30+200, dimensions*30+200, null);
                 }
             }
-
+            g2d.drawString(timeLeft, 50, 50);
             g2d.drawString("Flags left: " + flags, 50, 100);
             ArrayList<Space> booms = logic.getBooms();
 
@@ -298,7 +296,7 @@ public class DisplayPanel extends JPanel implements  MouseListener, ActionListen
                 if (casted == setDim) {
                     String input = textField.getText();
                     if (input.matches("[0-9]+")) {
-                        if (Integer.parseInt(input) > 0 && Integer.parseInt(input) <= 30) {
+                        if (Integer.parseInt(input) > 1 && Integer.parseInt(input) <= 30) {
                             dimensions = Integer.parseInt(textField.getText());
                         } else {
                             dimensions = 10;
